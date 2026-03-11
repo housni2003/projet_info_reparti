@@ -1,0 +1,73 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Inscription - FanfareHub</title>
+    </head>
+
+    <body>
+        <h1>Inscription à FanfareHub</h1>
+
+        <% String erreur=(String) request.getAttribute("erreur"); %>
+            <% if (erreur !=null) { %>
+                <p style="color:red;">
+                    <%= erreur %>
+                </p>
+                <% } %>
+
+                    <form action="inscription" method="post">
+                        <label for="nomUtilisateur">Nom d'utilisateur :</label>
+                        <input type="text" id="nomUtilisateur" name="nomUtilisateur" required>
+                        <br><br>
+
+                        <label for="email">Adresse email :</label>
+                        <input type="email" id="email" name="email" required>
+                        <br><br>
+
+                        <label for="confirmEmail">Confirmer l'adresse email :</label>
+                        <input type="email" id="confirmEmail" name="confirmEmail" required>
+                        <br><br>
+
+                        <label for="motDePasse">Mot de passe :</label>
+                        <input type="password" id="motDePasse" name="motDePasse" required>
+                        <br><br>
+
+                        <label for="confirmMotDePasse">Confirmer le mot de passe :</label>
+                        <input type="password" id="confirmMotDePasse" name="confirmMotDePasse" required>
+                        <br><br>
+
+                        <label for="prenom">Prénom :</label>
+                        <input type="text" id="prenom" name="prenom" required>
+                        <br><br>
+
+                        <label for="nom">Nom :</label>
+                        <input type="text" id="nom" name="nom" required>
+                        <br><br>
+
+                        <label for="genre">Genre :</label>
+                        <select id="genre" name="genre" required>
+                            <option value="">-- Choisir --</option>
+                            <option value="homme">Homme</option>
+                            <option value="femme">Femme</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                        <br><br>
+
+                        <label for="contraintes">Contraintes alimentaires :</label>
+                        <select id="contraintes" name="contraintesAlimentaires" required>
+                            <option value="aucune">Aucune</option>
+                            <option value="vegetarien">Végétarien</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="sans_porc">Sans porc</option>
+                        </select>
+                        <br><br>
+
+                        <button type="submit">S'inscrire</button>
+                    </form>
+
+                    <p>Déjà inscrit ? <a href="connexion.jsp">Se connecter</a></p>
+    </body>
+
+    </html>

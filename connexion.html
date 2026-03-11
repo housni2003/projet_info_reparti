@@ -1,0 +1,35 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Connexion - FanfareHub</title>
+    </head>
+
+    <body>
+        <h1>Connexion à FanfareHub</h1>
+
+        <% String erreur=(String) request.getAttribute("erreur"); %>
+            <% if (erreur !=null) { %>
+                <p style="color:red;">
+                    <%= erreur %>
+                </p>
+                <% } %>
+
+                    <form action="connexion" method="post">
+                        <label for="nomUtilisateur">Nom d'utilisateur :</label>
+                        <input type="text" id="nomUtilisateur" name="nomUtilisateur" required>
+                        <br><br>
+
+                        <label for="motDePasse">Mot de passe :</label>
+                        <input type="password" id="motDePasse" name="motDePasse" required>
+                        <br><br>
+
+                        <button type="submit">Se connecter</button>
+                    </form>
+
+                    <p>Pas encore de compte ? <a href="inscription.jsp">S'inscrire</a></p>
+    </body>
+
+    </html>
