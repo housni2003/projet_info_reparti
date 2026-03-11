@@ -55,30 +55,32 @@ erDiagram
 ### MLD
 
 ```mermaid
-erDiagram
+    erDiagram
+    COMMISSION ||--o{ S_IMPLIQUE_COMMISSION : "dirige"
+    PUPITRE ||--o{ APPARTIENT_PUPITRE : "contient"
+
+    S_IMPLIQUE_COMMISSION }o--|| FANFARON : "concerne"
+    APPARTIENT_PUPITRE }o--|| FANFARON : "joue"
+
     FANFARON {
-        string nom_utilisateur PK
-        string email
-        string mot_de_passe
+        string nom_utilisateur PK "Identifiant unique"
+        string email "Unique"
+        string mot_de_passe "Haché"
         string prenom
         string nom
-        string genre
+        string genre "homme, femme, autre"
         string contraintes_alimentaires
         datetime date_creation
         datetime derniere_connexion
         boolean est_admin
     }
 
-    PUPITRE {
-        int id_pupitre PK
-        string nom_pupitre
-    }
+%% --- CONNEXIONS VERS LA DROITE ---
+    FANFARON ||--o{ EVENEMENT : "propose (Prestation) "
+    FANFARON ||--o{ INSCRIPTION_EVENT : "participe"
+    EVENEMENT ||--o{ INSCRIPTION_EVENT : "reçoit"
 
-    COMMISSION {
-        int id_commission PK
-        string nom_commission
-    }
-
+%% --- PÔLE ACTIVITÉ (DROITE) ---
     EVENEMENT {
         int id_evenement PK
         string nom
@@ -86,7 +88,7 @@ erDiagram
         int duree
         string lieu
         string description
-        string nom_organisateur FK "Ref: FANFARON"
+        string nom_organisateur FK "Ref: FANFARON "
     }
 
     INSCRIPTION_EVENT {
@@ -96,26 +98,23 @@ erDiagram
         string statut
     }
 
+%% TABLES DE JOINTURE SIMPLIFIÉES
+    COMMISSION {
+        int id_commission PK
+        string nom_commission ""
+    }
+    PUPITRE {
+        int id_pupitre PK
+        string nom_pupitre ""
+    }
     APPARTIENT_PUPITRE {
-        string nom_utilisateur PK, FK "Ref: FANFARON"
-        int id_pupitre PK, FK "Ref: PUPITRE"
+        string nom_utilisateur PK, FK
+        int id_pupitre PK, FK
     }
-
     S_IMPLIQUE_COMMISSION {
-        string nom_utilisateur PK, FK "Ref: FANFARON"
-        int id_commission PK, FK "Ref: COMMISSION"
+        string nom_utilisateur PK, FK
+        int id_commission PK, FK
     }
-
-    FANFARON ||--o{ APPARTIENT_PUPITRE : ""
-    PUPITRE ||--o{ APPARTIENT_PUPITRE : ""
-
-    FANFARON ||--o{ S_IMPLIQUE_COMMISSION : ""
-    COMMISSION ||--o{ S_IMPLIQUE_COMMISSION : ""
-
-    FANFARON ||--o{ INSCRIPTION_EVENT : ""
-    EVENEMENT ||--o{ INSCRIPTION_EVENT : ""
-
-    FANFARON ||--o{ EVENEMENT : "propose"
 ```
 
 <b>FANFARON</b> (<u>nom_utilisateur</u>, email, mot_de_passe, prenom, nom, genre, contraintes_alimentaires, date_creation, derniere_connexion, est_admin)
