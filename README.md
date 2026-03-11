@@ -39,16 +39,26 @@ contraintes_alimentaires $\in$ {« aucune », « végétarien », « vegan », �
 ### Création de la table SQL
 
 ```sql
+CREATE DATABASE fanfarehub_db;
+
+CREATE USER fanfare_hub_owner WITH PASSWORD '...';
+
+GRANT ALL PRIVILEGES ON DATABASE fanfarehub_db TO fanfare_hub_owner;
+
+ALTER DATABASE fanfarehub_db OWNER TO fanfare_hub_owner;
+
 CREATE TABLE FANFARON (
     nom_utilisateur VARCHAR(255) PRIMARY KEY,
     email VARCHAR(255) UNIQUE NOT NULL,
     mot_de_passe VARCHAR(255) NOT NULL,
     prenom VARCHAR(255) NOT NULL,
     nom VARCHAR(255) NOT NULL,
-    genre ENUM('homme', 'femme', 'autre'),
-    contraintes_alimentaires ENUM('aucune', 'végétarien', 'vegan', 'sans porc'),
-    date_creation DATETIME NOT NULL,
-    derniere_connexion DATETIME,
-    est_admin BOOLEAN NOT NULL
+    genre VARCHAR(20) CHECK (genre IN ('homme', 'femme', 'autre')),
+    contraintes_alimentaires VARCHAR(50) CHECK (contraintes_alimentaires IN ('aucune', 'végétarien', 'vegan', 'sans porc')),
+    date_creation TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    derniere_connexion TIMESTAMP,
+    est_admin BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+ALTER TABLE FANFARON OWNER TO fanfare_hub_owner;
 ```
