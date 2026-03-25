@@ -44,7 +44,6 @@ erDiagram
         string statut "présent, absent, incertain"
     }
 
-    %% Relations
     FANFARON }o--o{ PUPITRE : "joue dans"
     FANFARON }o--o{ COMMISSION : "s'implique dans"
     FANFARON ||--o{ INSCRIPTION_EVENT : "s'inscrit"
@@ -75,12 +74,10 @@ erDiagram
         boolean est_admin
     }
 
-%% --- CONNEXIONS VERS LA DROITE ---
     FANFARON ||--o{ EVENEMENT : "propose (Prestation) "
     FANFARON ||--o{ INSCRIPTION_EVENT : "participe"
     EVENEMENT ||--o{ INSCRIPTION_EVENT : "reçoit"
 
-%% --- PÔLE ACTIVITÉ (DROITE) ---
     EVENEMENT {
         int id_evenement PK
         string nom
@@ -88,6 +85,7 @@ erDiagram
         int duree
         string lieu
         string description
+        string type "atelier, répétition, prestation"
         string nom_organisateur FK "Ref: FANFARON "
     }
 
@@ -98,7 +96,6 @@ erDiagram
         string statut
     }
 
-%% TABLES DE JOINTURE SIMPLIFIÉES
     COMMISSION {
         int id_commission PK
         string nom_commission ""
@@ -129,6 +126,7 @@ genre $\in$ {« homme », « femme », « autre »}.
 contraintes_alimentaires $\in$ {« aucune », « végétarien », « vegan », « sans porc »}.  
 <b>Sécurité</b> : mot_de_passe doit être stocké sous forme hachée
 
+# -------------------------------
 ### Création de la table SQL
 
 ```sql
