@@ -10,21 +10,20 @@ import java.sql.SQLException;
  */
 public class DatabaseConnection {
 
-    private static final String URL      = "jdbc:mysql://localhost:3306/fanfarehub?useSSL=false&serverTimezone=Europe/Paris&characterEncoding=UTF-8";
-    private static final String USER     = "root";
-    private static final String PASSWORD = "";   // à adapter selon votre configuration
+    private static final String URL      = "jdbc:postgresql://localhost:5432/fanfarehub_db";
+    private static final String USER     = "fanfare_user";
+    private static final String PASSWORD = "motDePasse";
 
     static {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
-            throw new ExceptionInInitializerError("Driver MySQL introuvable : " + e.getMessage());
+            throw new ExceptionInInitializerError("Driver PostgreSQL introuvable : " + e.getMessage());
         }
     }
 
     private DatabaseConnection() {}
 
-    /** Retourne une nouvelle connexion JDBC. Doit être fermée par l'appelant. */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
