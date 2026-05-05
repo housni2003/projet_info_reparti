@@ -129,7 +129,6 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
     @Override
     public List<Utilisateur> listerTous() throws Exception {
         List<Utilisateur> liste = new ArrayList<>();
-        // On trie par nom d'utilisateur pour un affichage plus propre dans le tableau
         String sql = "SELECT * FROM fanfaron ORDER BY nom_utilisateur ASC";
 
         try (Connection conn = DatabaseConnection.getConnection();
