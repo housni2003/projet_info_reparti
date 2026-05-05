@@ -2,21 +2,18 @@ package controller;
 
 import dao.UtilisateurDAO;
 import dao.UtilisateurDAOImpl;
-import model.Utilisateur;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Utilisateur;
 
 import java.io.IOException;
 
 /**
  * Contrôleur MVC pour l'inscription.
- * GET  → affiche le formulaire inscription.jsp
- * POST → valide les données, les persiste via le DAO, redirige vers accueil
  */
 @WebServlet("/inscription")
 public class InscriptionServlet extends HttpServlet {
@@ -50,59 +47,55 @@ public class InscriptionServlet extends HttpServlet {
         String genre            = trim(request.getParameter("genre"));
         String contraintes      = trim(request.getParameter("contraintesAlimentaires"));
 
-        // --- Validations ---
         if (nomUtilisateur.isEmpty() || email.isEmpty() || motDePasse == null
                 || prenom.isEmpty() || nom.isEmpty() || genre.isEmpty()) {
             retour(request, response, "Veuillez remplir tous les champs obligatoires.",
-                   nomUtilisateur, email, prenom, nom, genre, contraintes);
+                    nomUtilisateur, email, prenom, nom, genre, contraintes);
             return;
         }
 
         if (!email.equals(confirmEmail)) {
             retour(request, response, "Les adresses email ne correspondent pas.",
-                   nomUtilisateur, email, prenom, nom, genre, contraintes);
+                    nomUtilisateur, email, prenom, nom, genre, contraintes);
             return;
         }
 
         if (!motDePasse.equals(confirmMotDePasse)) {
             retour(request, response, "Les mots de passe ne correspondent pas.",
-                   nomUtilisateur, email, prenom, nom, genre, contraintes);
+                    nomUtilisateur, email, prenom, nom, genre, contraintes);
             return;
         }
 
         if (motDePasse.length() < 6) {
             retour(request, response, "Le mot de passe doit contenir au moins 6 caractères.",
-                   nomUtilisateur, email, prenom, nom, genre, contraintes);
+                    nomUtilisateur, email, prenom, nom, genre, contraintes);
             return;
         }
 
         try {
-            // Unicité du nom d'utilisateur et de l'email
             if (utilisateurDAO.nomUtilisateurExiste(nomUtilisateur)) {
                 retour(request, response, "Ce nom d'utilisateur est déjà pris.",
-                       nomUtilisateur, email, prenom, nom, genre, contraintes);
+                        nomUtilisateur, email, prenom, nom, genre, contraintes);
                 return;
             }
 
             if (utilisateurDAO.emailExiste(email)) {
                 retour(request, response, "Cette adresse email est déjà utilisée.",
-                       nomUtilisateur, email, prenom, nom, genre, contraintes);
+                        nomUtilisateur, email, prenom, nom, genre, contraintes);
                 return;
             }
 
-            // Construction du bean
+            // On utilise la méthode hasher de ConnexionServlet
             String motDePasseHash = ConnexionServlet.hasher(motDePasse);
-            Utilisateur u = new Utilisateur(nomUtilisateur, email, motDePasseHash,
-                                            prenom, nom, genre, contraintes);
+            Utilisateur u = new Utilisateur(nomUtilisateur, email, motDePasseHash, prenom, nom, genre, contraintes, false);
 
             boolean ok = utilisateurDAO.inserer(u);
             if (!ok) {
                 retour(request, response, "Erreur lors de l'inscription, veuillez réessayer.",
-                       nomUtilisateur, email, prenom, nom, genre, contraintes);
+                        nomUtilisateur, email, prenom, nom, genre, contraintes);
                 return;
             }
 
-            // Connexion automatique après inscription
             Utilisateur cree = utilisateurDAO.trouverParNom(nomUtilisateur);
             HttpSession session = request.getSession(true);
             session.setAttribute("utilisateur", cree);
@@ -112,7 +105,7 @@ public class InscriptionServlet extends HttpServlet {
         } catch (Exception e) {
             getServletContext().log("Erreur inscription", e);
             retour(request, response, "Erreur interne, veuillez réessayer.",
-                   nomUtilisateur, email, prenom, nom, genre, contraintes);
+                    nomUtilisateur, email, prenom, nom, genre, contraintes);
         }
     }
 
