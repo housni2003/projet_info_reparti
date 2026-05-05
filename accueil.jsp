@@ -18,6 +18,9 @@
         h1   { color: #2c6fad; }
         .info { background: #eef4fb; padding: 15px; border-radius: 6px; margin-top: 20px; }
         .info p { margin: 6px 0; }
+        a.admin { display: inline-block; margin-top: 25px; padding: 10px 20px;
+                  background: #27ae60; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px; }
+        a.admin:hover { background: #1e8449; }
         a.deconnexion { display: inline-block; margin-top: 25px; padding: 10px 20px;
                         background: #c0392b; color: white; text-decoration: none; border-radius: 4px; }
         a.deconnexion:hover { background: #96281b; }
@@ -39,6 +42,9 @@
         </p>
     </div>
 
+    <% if (utilisateur.isEstAdmin()) { %>
+    <a class="admin" href="admin">Panneau d'administration</a>
+    <% } %>
     <a class="deconnexion" href="deconnexion">Se déconnecter</a>
 </body>
 </html>

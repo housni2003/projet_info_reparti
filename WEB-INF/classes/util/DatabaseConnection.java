@@ -10,7 +10,7 @@ import java.sql.SQLException;
  */
 public class DatabaseConnection {
 
-    private static final String URL      = "jdbc:postgresql://localhost:5432/fanfarehub_db";
+    private static final String URL      = "jdbc:postgresql://localhost:5433/fanfarehub_db";
     private static final String USER     = "fanfare_user";
     private static final String PASSWORD = "motDePasse";
 

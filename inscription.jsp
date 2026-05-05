@@ -67,9 +67,9 @@
         <label for="contraintes">Contraintes alimentaires :</label>
         <select id="contraintes" name="contraintesAlimentaires">
             <option value="aucune"     <%= contraintes.equals("aucune")     ? "selected" : "" %>>Aucune</option>
-            <option value="vegetarien" <%= contraintes.equals("vegetarien") ? "selected" : "" %>>Végétarien</option>
+            <option value="végétarien" <%= contraintes.equals("végétarien") ? "selected" : "" %>>Végétarien</option>
             <option value="vegan"      <%= contraintes.equals("vegan")      ? "selected" : "" %>>Vegan</option>
-            <option value="sans_porc"  <%= contraintes.equals("sans_porc")  ? "selected" : "" %>>Sans porc</option>
+            <option value="sans porc"  <%= contraintes.equals("sans porc")  ? "selected" : "" %>>Sans porc</option>
         </select>
 
         <button type="submit">S'inscrire</button>
