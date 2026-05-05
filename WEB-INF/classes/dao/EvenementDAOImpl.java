@@ -93,14 +93,12 @@ public class EvenementDAOImpl implements EvenementDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, idEvenement);
-            // executeUpdate() retourne le nombre de lignes supprimées
             return ps.executeUpdate() > 0;
         }
     }
 
     @Override
     public boolean inscrireFanfaron(String nomUtilisateur, int idEvenement, String instrument, String statut) throws Exception {
-        // Le fameux UPSERT de PostgreSQL : Insert si nouveau, Update si existe déjà !
         String sql = "INSERT INTO inscription_event (nom_utilisateur, id_evenement, instrument, statut) " +
                 "VALUES (?, ?, ?, ?) " +
                 "ON CONFLICT (nom_utilisateur, id_evenement) " +
@@ -140,7 +138,6 @@ public class EvenementDAOImpl implements EvenementDAO {
     @Override
     public List<Inscription> listerInscriptionsParEvenement(int idEvenement) throws Exception {
         List<Inscription> liste = new ArrayList<>();
-        // Tri exigé par le cahier des charges du projet (TP)
         String sql = "SELECT * FROM inscription_event WHERE id_evenement = ? ORDER BY instrument ASC, statut ASC";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -156,9 +153,6 @@ public class EvenementDAOImpl implements EvenementDAO {
         return liste;
     }
 
-    /**
-     * Transforme une ligne de résultat SQL en objet Java (Inscription).
-     */
     private Inscription mapperInscription(ResultSet rs) throws SQLException {
         Inscription i = new Inscription();
         i.setNomUtilisateur(rs.getString("nom_utilisateur"));
