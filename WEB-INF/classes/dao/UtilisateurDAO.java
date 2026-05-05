@@ -2,6 +2,8 @@ package dao;
 
 import model.Utilisateur;
 
+import java.util.List;
+
 /**
  * Interface DAO pour l'entité Utilisateur.
  * Définit le contrat des opérations de persistance.
@@ -25,4 +27,13 @@ public interface UtilisateurDAO {
 
     /** Vérifie si un email est déjà utilisé. */
     boolean emailExiste(String email) throws Exception;
+
+    /** Récupère la liste de tous les utilisateurs (pour l'affichage du tableau admin). */
+    List<Utilisateur> listerTous() throws Exception;
+
+    /** Supprime un utilisateur par son nom d'utilisateur. Retourne true si succès. */
+    boolean supprimer(String nomUtilisateur) throws Exception;
+
+    /** Met à jour les informations d'un utilisateur (notamment ses droits admin). */
+    boolean mettreAJour(Utilisateur utilisateur) throws Exception;
 }

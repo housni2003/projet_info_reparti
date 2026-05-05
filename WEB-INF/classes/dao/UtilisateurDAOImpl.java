@@ -4,6 +4,8 @@ import model.Utilisateur;
 import util.DatabaseConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implémentation JDBC du patron DAO pour l'entité Utilisateur.
@@ -122,5 +124,55 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         if (dconn != null) u.setDerniereConnexion(dconn.toLocalDateTime());
 
         return u;
+    }
+
+    @Override
+    public List<Utilisateur> listerTous() throws Exception {
+        List<Utilisateur> liste = new ArrayList<>();
+        // On trie par nom d'utilisateur pour un affichage plus propre dans le tableau
+        String sql = "SELECT * FROM fanfaron ORDER BY nom_utilisateur ASC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                liste.add(mapperResultSet(rs));
+            }
+        }
+        return liste;
+    }
+
+    @Override
+    public boolean supprimer(String nomUtilisateur) throws Exception {
+        String sql = "DELETE FROM fanfaron WHERE nom_utilisateur = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nomUtilisateur);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    @Override
+    public boolean mettreAJour(Utilisateur u) throws Exception {
+        String sql = "UPDATE fanfaron " +
+                "SET email = ?, prenom = ?, nom = ?, genre = ?, contraintes_alimentaires = ?, est_admin = ? " +
+                "WHERE nom_utilisateur = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, u.getEmail());
+            ps.setString(2, u.getPrenom());
+            ps.setString(3, u.getNom());
+            ps.setString(4, u.getGenre());
+            ps.setString(5, u.getContraintesAlimentaires());
+            ps.setBoolean(6, u.isEstAdmin());
+            ps.setString(7, u.getNomUtilisateur()); // Clause WHERE
+
+            return ps.executeUpdate() == 1;
+        }
     }
 }
