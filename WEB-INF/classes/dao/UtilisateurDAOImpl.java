@@ -4,18 +4,18 @@ import model.Utilisateur;
 import util.DatabaseConnection;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 
 /**
  * Implémentation JDBC du patron DAO pour l'entité Utilisateur.
+ * Fait le lien avec la table `fanfaron` dans la base de données.
  */
 public class UtilisateurDAOImpl implements UtilisateurDAO {
 
     @Override
     public boolean inserer(Utilisateur u) throws Exception {
-        String sql = "INSERT INTO utilisateur " +
-                     "(nom_utilisateur, email, mot_de_passe, prenom, nom, genre, contraintes_alimentaires) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO fanfaron " +
+                "(nom_utilisateur, email, mot_de_passe, prenom, nom, genre, contraintes_alimentaires, est_admin) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -27,6 +27,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
             ps.setString(5, u.getNom());
             ps.setString(6, u.getGenre());
             ps.setString(7, u.getContraintesAlimentaires());
+            ps.setBoolean(8, u.isEstAdmin());
 
             return ps.executeUpdate() == 1;
         }
@@ -34,7 +35,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
     @Override
     public Utilisateur trouverParNom(String nomUtilisateur) throws Exception {
-        String sql = "SELECT * FROM utilisateur WHERE nom_utilisateur = ?";
+        String sql = "SELECT * FROM fanfaron WHERE nom_utilisateur = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -49,7 +50,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
     @Override
     public Utilisateur trouverParEmail(String email) throws Exception {
-        String sql = "SELECT * FROM utilisateur WHERE email = ?";
+        String sql = "SELECT * FROM fanfaron WHERE email = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -64,7 +65,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
     @Override
     public void mettreAJourDerniereConnexion(String nomUtilisateur) throws Exception {
-        String sql = "UPDATE utilisateur SET derniere_connexion = NOW() WHERE nom_utilisateur = ?";
+        String sql = "UPDATE fanfaron SET derniere_connexion = NOW() WHERE nom_utilisateur = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -76,7 +77,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
     @Override
     public boolean nomUtilisateurExiste(String nomUtilisateur) throws Exception {
-        String sql = "SELECT COUNT(*) FROM utilisateur WHERE nom_utilisateur = ?";
+        String sql = "SELECT COUNT(*) FROM fanfaron WHERE nom_utilisateur = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -90,7 +91,7 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
 
     @Override
     public boolean emailExiste(String email) throws Exception {
-        String sql = "SELECT COUNT(*) FROM utilisateur WHERE email = ?";
+        String sql = "SELECT COUNT(*) FROM fanfaron WHERE email = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -102,10 +103,9 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         }
     }
 
-    // Mappe un ResultSet vers un objet Utilisateur
     private Utilisateur mapperResultSet(ResultSet rs) throws SQLException {
         Utilisateur u = new Utilisateur();
-        u.setId(rs.getInt("id"));
+
         u.setNomUtilisateur(rs.getString("nom_utilisateur"));
         u.setEmail(rs.getString("email"));
         u.setMotDePasse(rs.getString("mot_de_passe"));
@@ -113,12 +113,13 @@ public class UtilisateurDAOImpl implements UtilisateurDAO {
         u.setNom(rs.getString("nom"));
         u.setGenre(rs.getString("genre"));
         u.setContraintesAlimentaires(rs.getString("contraintes_alimentaires"));
+        u.setEstAdmin(rs.getBoolean("est_admin"));
 
-        Timestamp di = rs.getTimestamp("date_inscription");
-        if (di != null) u.setDateInscription(di.toLocalDateTime());
+        Timestamp dc = rs.getTimestamp("date_creation");
+        if (dc != null) u.setDateCreation(dc.toLocalDateTime());
 
-        Timestamp dc = rs.getTimestamp("derniere_connexion");
-        if (dc != null) u.setDerniereConnexion(dc.toLocalDateTime());
+        Timestamp dconn = rs.getTimestamp("derniere_connexion");
+        if (dconn != null) u.setDerniereConnexion(dconn.toLocalDateTime());
 
         return u;
     }

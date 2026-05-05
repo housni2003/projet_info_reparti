@@ -33,7 +33,7 @@
         <p><strong>Email :</strong> <%= utilisateur.getEmail() %></p>
         <p><strong>Genre :</strong> <%= utilisateur.getGenre() %></p>
         <p><strong>Contraintes alimentaires :</strong> <%= utilisateur.getContraintesAlimentaires() %></p>
-        <p><strong>Inscrit le :</strong> <%= utilisateur.getDateInscription() %></p>
+        <p><strong>Inscrit le :</strong> <%= utilisateur.getDateCreation() %></p>
         <p><strong>Dernière connexion :</strong>
             <%= utilisateur.getDerniereConnexion() != null ? utilisateur.getDerniereConnexion() : "Première connexion" %>
         </p>
