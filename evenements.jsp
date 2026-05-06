@@ -70,7 +70,7 @@
             <tbody>
                 <% for (Evenement e : evenements) { %>
                 <tr>
-                    <td><strong><%= e.getNom() %></strong></td>
+                    <td><strong><a href="evenement?id=<%= e.getIdEvenement() %>" style="color:#2c6fad;"><%= e.getNom() %></a></strong></td>
                     <td><%= e.getHorodatage().format(fmtAff) %></td>
                     <td><%= e.getDuree() %></td>
                     <td><%= e.getLieu() %></td>
