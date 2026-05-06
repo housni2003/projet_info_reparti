@@ -21,6 +21,12 @@
         a.admin { display: inline-block; margin-top: 25px; padding: 10px 20px;
                   background: #27ae60; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px; }
         a.admin:hover { background: #1e8449; }
+        a.groupes { display: inline-block; margin-top: 25px; padding: 10px 20px;
+                    background: #8e44ad; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px; }
+        a.groupes:hover { background: #6c3483; }
+        a.evenements { display: inline-block; margin-top: 25px; padding: 10px 20px;
+                       background: #d35400; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px; }
+        a.evenements:hover { background: #a04000; }
         a.deconnexion { display: inline-block; margin-top: 25px; padding: 10px 20px;
                         background: #c0392b; color: white; text-decoration: none; border-radius: 4px; }
         a.deconnexion:hover { background: #96281b; }
@@ -42,6 +48,8 @@
         </p>
     </div>
 
+    <a class="groupes" href="groupes">Mes groupes et pupitres</a>
+    <a class="evenements" href="evenements">Événements</a>
     <% if (utilisateur.isEstAdmin()) { %>
     <a class="admin" href="admin">Panneau d'administration</a>
     <% } %>
