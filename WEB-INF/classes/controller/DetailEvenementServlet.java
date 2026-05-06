@@ -2,6 +2,8 @@ package controller;
 
 import dao.EvenementDAO;
 import dao.EvenementDAOImpl;
+import dao.GroupeDAO;
+import dao.GroupeDAOImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Evenement;
 import model.Inscription;
+import model.Pupitre;
 import model.Utilisateur;
 
 import java.io.IOException;
@@ -19,10 +22,12 @@ import java.util.List;
 public class DetailEvenementServlet extends HttpServlet {
 
     private EvenementDAO evenementDAO;
+    private GroupeDAO    groupeDAO;
 
     @Override
     public void init() {
         evenementDAO = new EvenementDAOImpl();
+        groupeDAO    = new GroupeDAOImpl();
     }
 
     @Override
@@ -49,9 +54,15 @@ public class DetailEvenementServlet extends HttpServlet {
             Inscription monInscription = evenementDAO.obtenirInscription(utilisateur.getNomUtilisateur(), id);
             List<Inscription> toutesInscriptions = evenementDAO.listerInscriptionsParEvenement(id);
 
+            List<Pupitre> tousLesPupitres = groupeDAO.listerTousLesPupitres();
+            List<Integer> mesPupitresIds  = groupeDAO.getPupitresUtilisateur(utilisateur.getNomUtilisateur());
+
             request.setAttribute("evenement", evenement);
             request.setAttribute("monInscription", monInscription);
             request.setAttribute("inscriptions", toutesInscriptions);
+
+            request.setAttribute("tousLesPupitres", tousLesPupitres);
+            request.setAttribute("mesPupitresIds", mesPupitresIds);
 
         } catch (Exception e) {
             getServletContext().log("Erreur DetailEvenementServlet GET", e);
@@ -70,9 +81,9 @@ public class DetailEvenementServlet extends HttpServlet {
         Utilisateur utilisateur = verifierConnexion(request, response);
         if (utilisateur == null) return;
 
-        String idStr    = request.getParameter("idEvenement");
+        String idStr      = request.getParameter("idEvenement");
         String instrument = request.getParameter("instrument") != null ? request.getParameter("instrument").trim() : "";
-        String statut   = request.getParameter("statut");
+        String statut     = request.getParameter("statut");
 
         if (idStr == null || statut == null || statut.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/evenements");

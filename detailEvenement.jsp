@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="model.Utilisateur, model.Evenement, model.Inscription, java.util.List, java.time.format.DateTimeFormatter" %>
+<%@ page import="model.Utilisateur, model.Evenement, model.Inscription, model.Pupitre, java.util.List, java.time.format.DateTimeFormatter" %>
 <%
     Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
     if (utilisateur == null) {
@@ -10,6 +10,11 @@
     Evenement           evenement        = (Evenement)    request.getAttribute("evenement");
     Inscription         monInscription   = (Inscription)  request.getAttribute("monInscription");
     List<Inscription>   inscriptions     = (List<Inscription>) request.getAttribute("inscriptions");
+
+    // NOUVEAU : Récupération des pupitres
+    List<Pupitre>       tousLesPupitres  = (List<Pupitre>) request.getAttribute("tousLesPupitres");
+    List<Integer>       mesPupitresIds   = (List<Integer>) request.getAttribute("mesPupitresIds");
+
     String              erreur           = (String)       request.getAttribute("erreur");
     boolean             succes           = "1".equals(request.getParameter("succes"));
 
@@ -82,11 +87,19 @@
         <div class="form-group">
             <label for="instrument">Instrument</label>
             <select id="instrument" name="instrument">
-                <option value="">-- Aucun / Non précisé --</option>
-                <% String[] instruments = {"clarinette", "saxophone alto", "saxophone baryton", "trompette", "trombone", "euphonium", "basse", "percussion"}; %>
-                <% for (String instr : instruments) { %>
-                <option value="<%= instr %>" <%= instr.equals(valInstrument) ? "selected" : "" %>><%= instr.substring(0,1).toUpperCase() + instr.substring(1) %></option>
-                <% } %>
+                <option value="">Sans instrument</option>
+                <%
+                    if (tousLesPupitres != null && mesPupitresIds != null) {
+                        for (Pupitre p : tousLesPupitres) {
+                            if (mesPupitresIds.contains(p.getId())) {
+                %>
+                <option value="<%= p.getNom() %>" <%= p.getNom().equals(valInstrument) ? "selected" : "" %>>
+                    <%= p.getNom() %>
+                </option>
+                <%          }
+                }
+                }
+                %>
             </select>
         </div>
 
@@ -114,7 +127,7 @@
     %>
     <tr<%= estMoi ? " class=\"moi\"" : "" %>>
         <td><%= ins.getNomUtilisateur() %><%= estMoi ? " <em>(vous)</em>" : "" %></td>
-        <td><%= ins.getInstrument() != null && !ins.getInstrument().isEmpty() ? ins.getInstrument() : "-" %></td>
+        <td><%= ins.getInstrument() != null && !ins.getInstrument().isEmpty() ? ins.getInstrument() : "<em>Sans instrument</em>" %></td>
         <td class="<%= cssStatut %>"><%= ins.getStatut() %></td>
     </tr>
     <% } %>
