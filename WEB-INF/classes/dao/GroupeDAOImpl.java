@@ -155,4 +155,169 @@ public class GroupeDAOImpl implements GroupeDAO {
             }
         }
     }
+
+    @Override
+    public void ajouterPupitre(Pupitre p) throws Exception {
+        String sql = "INSERT INTO pupitre (nom_pupitre) VALUES (?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, p.getNom());
+            ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public void modifierPupitre(Pupitre p) throws Exception {
+        String sqlSelectOld = "SELECT nom_pupitre FROM pupitre WHERE id_pupitre = ?";
+        String sqlUpdatePupitre = "UPDATE pupitre SET nom_pupitre = ? WHERE id_pupitre = ?";
+        String sqlUpdateInscriptions = "UPDATE inscription_event SET instrument = ? WHERE instrument = ?";
+
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            String ancienNom = null;
+            try (PreparedStatement psSelect = conn.prepareStatement(sqlSelectOld)) {
+                psSelect.setInt(1, p.getId());
+                try (ResultSet rs = psSelect.executeQuery()) {
+                    if (rs.next()) {
+                        ancienNom = rs.getString("nom_pupitre");
+                    }
+                }
+            }
+
+            try (PreparedStatement psUpdatePupitre = conn.prepareStatement(sqlUpdatePupitre)) {
+                psUpdatePupitre.setString(1, p.getNom());
+                psUpdatePupitre.setInt(2, p.getId());
+                psUpdatePupitre.executeUpdate();
+            }
+
+            if (ancienNom != null && !ancienNom.equals(p.getNom())) {
+                try (PreparedStatement psUpdateInscr = conn.prepareStatement(sqlUpdateInscriptions)) {
+                    psUpdateInscr.setString(1, p.getNom());
+                    psUpdateInscr.setString(2, ancienNom);
+                    psUpdateInscr.executeUpdate();
+                }
+            }
+
+            conn.commit();
+
+        } catch (Exception e) {
+            if (conn != null) conn.rollback();
+            throw e;
+        } finally {
+            if (conn != null) {
+                conn.setAutoCommit(true);
+                conn.close();
+            }
+        }
+    }
+
+    @Override
+    public void supprimerPupitre(int id) throws Exception {
+        String sqlSelectOld = "SELECT nom_pupitre FROM pupitre WHERE id_pupitre = ?";
+        String sqlUpdateInscriptions = "UPDATE inscription_event SET instrument = NULL WHERE instrument = ?";
+        String sqlDeletePupitre = "DELETE FROM pupitre WHERE id_pupitre = ?";
+
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            String ancienNom = null;
+            try (PreparedStatement psSelect = conn.prepareStatement(sqlSelectOld)) {
+                psSelect.setInt(1, id);
+                try (ResultSet rs = psSelect.executeQuery()) {
+                    if (rs.next()) {
+                        ancienNom = rs.getString("nom_pupitre");
+                    }
+                }
+            }
+
+            if (ancienNom != null) {
+                try (PreparedStatement psUpdateInscr = conn.prepareStatement(sqlUpdateInscriptions)) {
+                    psUpdateInscr.setString(1, ancienNom);
+                    psUpdateInscr.executeUpdate();
+                }
+            }
+
+            try (PreparedStatement psDelete = conn.prepareStatement(sqlDeletePupitre)) {
+                psDelete.setInt(1, id);
+                psDelete.executeUpdate();
+            }
+
+            conn.commit();
+
+        } catch (Exception e) {
+            if (conn != null) conn.rollback();
+            throw e;
+        } finally {
+            if (conn != null) {
+                conn.setAutoCommit(true);
+                conn.close();
+            }
+        }
+    }
+
+    @Override
+    public Pupitre trouverPupitreParId(int id) throws Exception {
+        String sql = "SELECT id_pupitre, nom_pupitre FROM pupitre WHERE id_pupitre = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Pupitre(rs.getInt("id_pupitre"), rs.getString("nom_pupitre"));
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void ajouterCommission(Commission c) throws Exception {
+        String sql = "INSERT INTO commission (nom_commission) VALUES (?)";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, c.getNom());
+            ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public void modifierCommission(Commission c) throws Exception {
+        String sql = "UPDATE commission SET nom_commission = ? WHERE id_commission = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, c.getNom());
+            ps.setInt(2, c.getId());
+            ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public void supprimerCommission(int id) throws Exception {
+        String sql = "DELETE FROM commission WHERE id_commission = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+
+    @Override
+    public Commission trouverCommissionParId(int id) throws Exception {
+        String sql = "SELECT id_commission, nom_commission FROM commission WHERE id_commission = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Commission(rs.getInt("id_commission"), rs.getString("nom_commission"));
+                }
+            }
+        }
+        return null;
+    }
 }

@@ -48,6 +48,7 @@ public class EvenementServlet extends HttpServlet {
 
             if ("formulaireAjouter".equals(action)) {
                 if (!peutGerer) { response.sendRedirect(request.getContextPath() + "/evenements"); return; }
+                // pas d'attribut "evenement" → la JSP affiche un formulaire vide
                 request.getRequestDispatcher("/formulaireEvenement.jsp").forward(request, response);
 
             } else if ("formulaireModifier".equals(action)) {
@@ -127,6 +128,7 @@ public class EvenementServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/evenements?succes=1");
     }
 
+    // Lit et valide les champs du formulaire. Retourne null si un champ est manquant.
     private Evenement lireFormulaire(HttpServletRequest request, int id) {
         String nom           = trim(request.getParameter("nom"));
         String horodatageStr = trim(request.getParameter("horodatage"));
@@ -150,6 +152,7 @@ public class EvenementServlet extends HttpServlet {
         }
     }
 
+    // Vérifie si l'utilisateur appartient à la commission "commission prestation"
     private boolean estMembreCommissionPrestation(String nomUtilisateur) throws Exception {
         List<Integer> idsUtilisateur = groupeDAO.getCommissionsUtilisateur(nomUtilisateur);
         if (idsUtilisateur.isEmpty()) return false;

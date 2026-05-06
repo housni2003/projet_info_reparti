@@ -21,6 +21,7 @@
 <p><a class="retour" href="accueil.jsp">← Retour à l'accueil</a></p>
 
 <h1>Administration des comptes</h1>
+<a class="btn btn-purple" style="margin-bottom: 20px;" href="admin-groupes">Gérer les pupitres et commissions</a>
 
 <% if (erreur != null) { %>
 <p class="erreur"><%= erreur %></p>

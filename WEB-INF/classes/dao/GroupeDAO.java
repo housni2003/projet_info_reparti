@@ -27,4 +27,14 @@ public interface GroupeDAO {
 
     /** Met à jour la liste complète des commissions d'un utilisateur. */
     void mettreAJourCommissionsUtilisateur(String nomUtilisateur, List<Integer> idCommissions) throws Exception;
+
+    void ajouterPupitre(Pupitre p) throws Exception;
+    void modifierPupitre(Pupitre p) throws Exception;
+    void supprimerPupitre(int id) throws Exception;
+    Pupitre trouverPupitreParId(int id) throws Exception;
+
+    void ajouterCommission(Commission c) throws Exception;
+    void modifierCommission(Commission c) throws Exception;
+    void supprimerCommission(int id) throws Exception;
+    Commission trouverCommissionParId(int id) throws Exception;
 }
