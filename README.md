@@ -1,8 +1,8 @@
-# projet_info_reparti
+# Projet Info Réparti
 
-## Exercice 1 : Inscription
+Tanguy LASNE
+Housni RAKOTOARISOA
 
-### Q1. 
 
 ### MCD (Modèle Conceptuel des Données)
 
@@ -221,4 +221,51 @@ GRANT USAGE, SELECT, UPDATE ON SEQUENCE
     TO fanfare_user;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE fanfaron TO fanfare_user;
+
+
+-- ==========================================
+-- DONNÉES DE TEST
+-- ==========================================
+
+-- Ajout des Fanfarons
+INSERT INTO fanfaron (nom_utilisateur, email, mot_de_passe, prenom, nom, genre, contraintes_alimentaires, est_admin)
+VALUES
+    ('admin', 'admin@fanfarehub.fr', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', 'Super', 'Admin', 'autre', 'aucune', TRUE),
+    ('jdupont', 'jean.dupont@email.com', '6a715a519890f91bf971f11fcb68072124506fbc3b53c65cdeff8e7b9ec598f8', 'Jean', 'Dupont', 'homme', 'végétarien', FALSE),
+    ('mmartin', 'marie.martin@email.com', '6a715a519890f91bf971f11fcb68072124506fbc3b53c65cdeff8e7b9ec598f8', 'Marie', 'Martin', 'femme', 'aucune', FALSE),
+    ('lpetit', 'lucas.petit@email.com', '6a715a519890f91bf971f11fcb68072124506fbc3b53c65cdeff8e7b9ec598f8', 'Lucas', 'Petit', 'homme', 'sans porc', FALSE);
+
+-- Association des Fanfarons à leurs Pupitres
+INSERT INTO appartient_pupitre (nom_utilisateur, id_pupitre)
+VALUES
+    ('admin', 6),
+    ('jdupont', 1),
+    ('mmartin', 4),
+    ('lpetit', 8);
+
+-- Implication des Fanfarons dans les Commissions
+INSERT INTO s_implique_commission (nom_utilisateur, id_commission)
+VALUES
+    ('admin', 1),
+    ('jdupont', 2),
+    ('mmartin', 3);
+
+-- Création d'Événements
+INSERT INTO evenement (nom, horodatage, duree, lieu, description, type, nom_organisateur)
+VALUES
+    ('Répétition Générale', '2024-06-15 14:00:00', 120, 'Local de la fanfare', 'Répétition pour préparer la fête de la musique.', 'répétition', 'admin'),
+    ('Fête de la Musique', '2024-06-21 20:00:00', 180, 'Place de la Mairie', 'Grande prestation annuelle en centre-ville.', 'prestation', 'admin'),
+    ('Atelier d''improvisation', '2024-07-02 18:30:00', 90, 'Salle polyvalente', 'Atelier mené par un intervenant extérieur.', 'atelier', 'admin');
+
+-- Inscription des Fanfarons aux Événements
+INSERT INTO inscription_event (nom_utilisateur, id_evenement, instrument, statut)
+VALUES
+('admin', 1, 'trompette', 'présent'),
+('jdupont', 1, 'clarinette', 'présent'),
+('mmartin', 1, 'percussion', 'absent'),
+
+('admin', 2, 'trompette', 'présent'),
+('jdupont', 2, 'clarinette', 'présent'),
+('mmartin', 2, 'percussion', 'présent'),
+('lpetit', 2, 'trombone', 'incertain');
 ```
